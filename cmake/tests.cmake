@@ -1,5 +1,12 @@
-if (NOT EXISTS "${PROJECT_SOURCE_DIR}/../gmock/CMakeLists.txt")
-  message(FATAL_ERROR "Cannot find gmock directory.")
+find_package(Git REQUIRED)
+set(GMOCK_SOURCE_DIR ${CMAKE_SOURCE_DIR}/../gmock)
+set(GTEST_SOURCE_DIR ${GMOCK_SOURCE_DIR}/gtest)
+if(NOT EXISTS ${GMOCK_SOURCE_DIR})
+  execute_process(COMMAND ${GIT_EXECUTABLE} clone -b release-1.7.0 https://github.com/google/googlemock.git  ${GMOCK_SOURCE_DIR})
+endif()
+
+if(NOT EXISTS ${GTEST_SOURCE_DIR})
+  execute_process(COMMAND ${GIT_EXECUTABLE} clone -b release-1.7.0 https://github.com/google/googletest.git  ${GTEST_SOURCE_DIR})
 endif()
 
 option(protobuf_ABSOLUTE_TEST_PLUGIN_PATH
