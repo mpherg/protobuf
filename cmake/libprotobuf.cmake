@@ -124,6 +124,12 @@ if(MSVC AND protobuf_BUILD_SHARED_LIBS)
     PUBLIC  PROTOBUF_USE_DLLS
     PRIVATE LIBPROTOBUF_EXPORTS)
 endif()
+if(UNIX AND protobuf_BUILD_SHARED_LIBS)
+  set_target_properties(libprotobuf PROPERTIES
+    VERSION ${protobuf_SOVERSION}
+    SOVERSION ${protobuf_SOVERSION_MAJOR})
+endif()
 set_target_properties(libprotobuf PROPERTIES
     OUTPUT_NAME ${LIB_PREFIX}protobuf
     DEBUG_POSTFIX "${protobuf_DEBUG_POSTFIX}")
+

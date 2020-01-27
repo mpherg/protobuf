@@ -71,10 +71,23 @@ if(protobuf_VERSION_PRERELEASE)
   set(protobuf_VERSION "${protobuf_VERSION}-${protobuf_VERSION_PRERELEASE}")
 endif()
 
+# Parse the shared object version (soversion)
+set(protobuf_MAKEFILE_AM "${CMAKE_SOURCE_DIR}/../src/Makefile.am")
+# Can't make [0-9]+ match more than one character
+set(protobuf_SOVERSION_REGEX "^libprotobuf_la.+([0-9][0-9]):([0-9]+):([0-9]+).*")
+file(STRINGS "${protobuf_MAKEFILE_AM}" protobuf_SOVERSION_LINE
+     LIMIT_COUNT 1 REGEX "${protobuf_SOVERSION_REGEX}")
+string(REGEX REPLACE "${protobuf_SOVERSION_REGEX}" "\\1" protobuf_SOVERSION_MAJOR "${protobuf_SOVERSION_LINE}")
+string(REGEX REPLACE "${protobuf_SOVERSION_REGEX}" "\\2" protobuf_SOVERSION_MINOR "${protobuf_SOVERSION_LINE}")
+string(REGEX REPLACE "${protobuf_SOVERSION_REGEX}" "\\3" protobuf_SOVERSION_PATCH "${protobuf_SOVERSION_LINE}")
+set(protobuf_SOVERSION "${protobuf_SOVERSION_MAJOR}.${protobuf_SOVERSION_MINOR}.${protobuf_SOVERSION_PATCH}")
+
+
 if(protobuf_VERBOSE)
   message(STATUS "Configuration script parsing status [")
   message(STATUS "  Description : ${protobuf_DESCRIPTION}")
   message(STATUS "  Version     : ${protobuf_VERSION} (${protobuf_VERSION_STRING})")
+  message(STATUS "  SO Version  : ${protobuf_SOVERSION}")
   message(STATUS "  Contact     : ${protobuf_CONTACT}")
   message(STATUS "]")
 endif()
